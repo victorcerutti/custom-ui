@@ -172,11 +172,17 @@ class WeatherCard extends LitElement {
         <span>
           <ul class="variations">
             <li>
-              <span class="ha-icon"
-                ><ha-icon icon="mdi:water-percent"></ha-icon
-              ></span>
-              ${stateObj.attributes.humidity}<span class="unit"> % </span>
-              <br />
+              ${
+                !isNaN(stateObj.attributes.humidity)
+                  ? html`
+                      <span class="ha-icon"
+                        ><ha-icon icon="mdi:water-percent"></ha-icon
+                      ></span>
+                      ${stateObj.attributes.humidity}<span class="unit"> % </span>
+                      <br />
+                    `
+                  : ""
+              }
               <span class="ha-icon"
                 ><ha-icon icon="mdi:weather-windy"></ha-icon
               ></span>
@@ -195,18 +201,51 @@ class WeatherCard extends LitElement {
               ${next_rising.toLocaleTimeString()}
             </li>
             <li>
-              <span class="ha-icon"><ha-icon icon="mdi:gauge"></ha-icon></span
-              >${stateObj.attributes.pressure}<span class="unit">
-                ${this.getUnit("air_pressure")}
-              </span>
-              <br />
-              <span class="ha-icon"
-                ><ha-icon icon="mdi:weather-fog"></ha-icon
-              ></span>
-              ${stateObj.attributes.visibility}<span class="unit">
-                ${this.getUnit("length")}
-              </span>
-              <br />
+              ${
+                !isNaN(stateObj.attributes.pressure)
+                  ? html`
+                      <span class="ha-icon"><ha-icon icon="mdi:gauge"></ha-icon></span
+                      >${stateObj.attributes.pressure}<span class="unit">
+                        ${this.getUnit("air_pressure")}
+                      </span>
+                      <br />
+                    `
+                  : ""
+              }
+
+              ${
+                (stateObj.attributes.next_rain && isNaN(stateObj.attributes.next_rain))
+                  ? html`
+                      <span class="ha-icon"><ha-icon icon="mdi:weather-rainy"></ha-icon></span
+                      >${stateObj.attributes.next_rain}
+                      <br />
+                    `
+                  : ""
+              }
+              ${
+                (stateObj.attributes.next_rain && !isNaN(stateObj.attributes.next_rain))
+                  ? html`
+                      <span class="ha-icon"><ha-icon icon="mdi:weather-rainy"></ha-icon></span
+                      >${stateObj.attributes.next_rain}
+                      <span class="unit">
+                        min
+                      </span>
+                      <br />
+                    `
+                  : ""
+              }
+
+              ${
+                !isNaN(stateObj.attributes.visibility)
+                  ? html`
+                      <span class="ha-icon"><ha-icon icon="weather-fog"></ha-icon></span
+                      >${stateObj.attributes.visibility}<span class="unit">
+                        ${this.getUnit("length")}
+                      </span>
+                      <br />
+                    `
+                  : ""
+              }
               <span class="ha-icon"
                 ><ha-icon icon="mdi:weather-sunset-down"></ha-icon
               ></span>
@@ -245,7 +284,7 @@ class WeatherCard extends LitElement {
                             }</span
                           >
                           ${
-                            daily.templow
+                            !isNaN(daily.templow)
                               ? html`
                                   <br /><span class="lowTemp"
                                     >${daily.templow}${
@@ -387,7 +426,7 @@ class WeatherCard extends LitElement {
 
         .day {
           display: block;
-          width: 20%;
+          width: 25%;
           float: left;
           text-align: center;
           color: var(--primary-text-color);
